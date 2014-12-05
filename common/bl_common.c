@@ -72,7 +72,8 @@ void change_security_state(unsigned int target_security_state)
 
 /******************************************************************************
  * Determine whether the memory region delimited by 'addr' and 'size' is free,
- * given the extents of free memory.
+ * 判定由addr和size划定的内存区块是否为free....
+ * given the extents of free memory.  给出free内存的范围...
  * Return 1 if it is free, 0 otherwise.
  *****************************************************************************/
 static int is_mem_free(uint64_t free_base, size_t free_size,
@@ -147,9 +148,9 @@ static void dump_load_info(unsigned long image_load_addr,
 			   const meminfo_t *mem_layout)
 {
 	INFO("Trying to load image at address 0x%lx, size = 0x%lx\n",
-		image_load_addr, image_size);
+		image_load_addr, image_size); //image_size是实时计算出来的...
 	INFO("Current memory layout:\n");
-	INFO("  total region = [0x%lx, 0x%lx]\n", mem_layout->total_base,
+	INFO("  total region = [0x%lx, 0x%lx]\n", mem_layout->total_base,  //hugo
 			mem_layout->total_base + mem_layout->total_size);
 	INFO("  free region = [0x%lx, 0x%lx]\n", mem_layout->free_base,
 			mem_layout->free_base + mem_layout->free_size);
@@ -256,9 +257,9 @@ int load_image(meminfo_t *mem_layout,
 	/* Check that the memory where the image will be loaded is free */
 	if (!is_mem_free(mem_layout->free_base, mem_layout->free_size,
 			 image_base, image_size)) {
-		WARN("Failed to reserve memory: 0x%lx - 0x%lx\n",
+		WARN("Failed to reserve memory: 0x%lx - 0x%lx\n", //hugo
 			image_base, image_base + image_size);
-		dump_load_info(image_base, image_size, mem_layout);
+		dump_load_info(image_base, image_size, mem_layout);  //hugo
 		io_result = -ENOMEM;
 		goto exit;
 	}

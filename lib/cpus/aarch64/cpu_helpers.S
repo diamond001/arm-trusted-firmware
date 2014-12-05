@@ -40,16 +40,19 @@
 #if IMAGE_BL1 || (IMAGE_BL31 && RESET_TO_BL31)
 	/*
 	 * The reset handler common to all platforms.  After a matching
-	 * cpu_ops structure entry is found, the correponding reset_handler
+	 * 这里的复位处理程序对于所有平台都是通用的。
+         * cpu_ops structure entry is found, the correponding reset_handler
 	 * in the cpu_ops is invoked.
+	 * 当发现一个匹配的cpu_ops结构体入口之后，cpu_ops中相应的复位处理程序被激活...
 	 */
 	.globl	reset_handler
 func reset_handler
-	mov	x19, x30
+	mov	x19, x30   //把链接寄存器保存到栈里面...
 
-	bl	plat_reset_handler
+	bl	plat_reset_handler   // 平台复位处理程序...
 
 	/* Get the matching cpu_ops pointer */
+	/* 获取匹配到的cpu_ops指针 */
 	bl	get_cpu_ops_ptr
 #if ASM_ASSERTION
 	cmp	x0, #0
@@ -59,7 +62,7 @@ func reset_handler
 	/* Get the cpu_ops reset handler */
 	ldr	x2, [x0, #CPU_RESET_FUNC]
 	mov	x30, x19
-	cbz	x2, 1f
+	cbz	x2, 1f  /* x2如果等于0，则跳转到1f */
 	br	x2
 1:
 	ret
@@ -152,9 +155,12 @@ func do_cpu_reg_dump
 
 	/*
 	 * The below function returns the cpu_ops structure matching the
-	 * midr of the core. It reads the MIDR_EL1 and finds the matching
+	 * midr of the core.  下面的函数返回cpu_ops结构体，该结构体是和core的midr匹配的...
+         * It reads the MIDR_EL1 and finds the matching
 	 * entry in cpu_ops entries. Only the implementation and part number
 	 * are used to match the entries.
+         * 它读取MIDR_EL1，并且在cpu_ops入口找到匹配的入口。
+         * 只有implementation和part number被用于匹配入口...
 	 * Return :
 	 *     x0 - The matching cpu_ops pointer on Success
 	 *     x0 - 0 on failure.
@@ -171,12 +177,13 @@ func get_cpu_ops_ptr
 
 	/* Read the MIDR_EL1 */
 	mrs	x2, midr_el1
-	mov_imm	x3, CPU_IMPL_PN_MASK
+	mov_imm	x3, CPU_IMPL_PN_MASK   // impl是什么????
 
 	/* Retain only the implementation and part number using mask */
+        /* 通过位与操作保留impl和part number */
 	and	w2, w2, w3
 1:
-	/* Check if we have reached end of list */
+	/* Check if we have reached end of list 什么 list？？？*/
 	cmp	x4, x5
 	b.eq	error_exit
 
@@ -184,11 +191,13 @@ func get_cpu_ops_ptr
 	ldr	x1, [x4], #CPU_OPS_SIZE
 	and	w1, w1, w3
 
-	/* Check if midr matches to midr of this core */
+	/* Check if midr matches to midr of this core 
+           检测midr是否匹配这个核的midr */
 	cmp	w1, w2
 	b.ne	1b
 
 	/* Subtract the increment and offset to get the cpu-ops pointer */
+        // 获取cpu-ops的指针...
 	sub	x0, x4, #(CPU_OPS_SIZE + CPU_MIDR)
 error_exit:
 	ret

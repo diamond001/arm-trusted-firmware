@@ -118,16 +118,23 @@ func platform_mem_init
 	 * Implement workaround for defect id 831273 by enabling
 	 * an event stream every 65536 cycles and set the L2 RAM
 	 * latencies for Cortex-A57.
+         * 通过每65536个时钟周期使能一个事件流，为defect id 831273实现一个变通方案,
+         * 并且为Cortex-A57设置L2 RAM latencies,
 	 * -----------------------------------------------------
 	 */
 func plat_reset_handler
 	/* Read the MIDR_EL1 */
+        /* MIDR_EL1 Provides identification information for the PE, 
+	   including an implementer code for the device 
+	   and a device ID number.*/
 	mrs	x0, midr_el1
 	ubfx	x1, x0, MIDR_PN_SHIFT, #12
+        /* 和PartNum(w1) 做比较，如果不等于，则跳转 ... */
 	cmp     w1, #((CORTEX_A57_MIDR >> MIDR_PN_SHIFT) & MIDR_PN_MASK)
 	b.ne    1f
 
 	/* Change the L2 Data and Tag Ram latency to 3 cycles */
+        /* latency是什么 ...*/
 	mov	x0, #(L2_DATA_RAM_LATENCY_3_CYCLES |    \
 			(L2_TAG_RAM_LATENCY_3_CYCLES << \
 			 L2CTLR_TAG_RAM_LATENCY_SHIFT))
@@ -136,10 +143,14 @@ func plat_reset_handler
 1:
 	/* ---------------------------------------------
 	* Enable the event stream every 65536 cycles
+        * 每65536个时钟周期，使能时间流...
 	* ---------------------------------------------
 	*/
+        /* Controls the generation of an event stream from the virtual counter, 
+           and access from EL0 to the physical counter, virtual counter, EL1 physical timers, 
+           and the virtual timer. */
 	mov     x0, #(0xf << EVNTI_SHIFT)
 	orr     x0, x0, #EVNTEN_BIT
 	msr     CNTKCTL_EL1, x0
 	isb
-	ret
+	ret   /* 跳出子函数 */

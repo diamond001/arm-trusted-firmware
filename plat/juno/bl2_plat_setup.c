@@ -293,17 +293,19 @@ void bl2_plat_set_bl33_ep_info(image_info_t *image,
 /*******************************************************************************
  * Populate the extents of memory available for loading BL3-2
  ******************************************************************************/
-void bl2_plat_get_bl32_meminfo(meminfo_t *bl32_meminfo)
+void bl2_plat_get_bl32_meminfo(meminfo_t *bl32_meminfo)  //hugo
 {
 	/*
 	 * Populate the extents of memory available for loading BL3-2.
 	 */
 	bl32_meminfo->total_base = BL32_BASE;
 	bl32_meminfo->free_base = BL32_BASE;
-	bl32_meminfo->total_size =
-		       (TSP_SEC_MEM_BASE + TSP_SEC_MEM_SIZE) - BL32_BASE;
+	bl32_meminfo->total_size =    //hugo
+		       (TSP_SEC_MEM_BASE + TSP_SEC_MEM_SIZE) - BL32_BASE; //¿ÉÒÔ¼õÐ¡BL32_BASE
 	bl32_meminfo->free_size =
 		       (TSP_SEC_MEM_BASE + TSP_SEC_MEM_SIZE) - BL32_BASE;
+//	INFO("BL32: hugo bl32_meminfo->total_size: %x \n\r", bl32_meminfo->total_size);
+//	INFO("BL32: hugo bl32_meminfo->free_size: %x \n\r", bl32_meminfo->free_size);
 }
 
 

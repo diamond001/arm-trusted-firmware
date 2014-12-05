@@ -36,6 +36,7 @@
 
 	/* -----------------------------------------------------
 	 * bl1_entrypoint() is the entry point into the trusted
+	 * 热重启或者冷重启的时候，可信固件的入口点
 	 * firmware code when a cpu is released from warm or
 	 * cold reset.
 	 * -----------------------------------------------------
@@ -45,16 +46,21 @@ func bl1_entrypoint
 	/* ---------------------------------------------
 	 * Set the CPU endianness before doing anything
 	 * that might involve memory reads or writes.
+	 * 在做任何内存相关的读或者写之前，设置CPU的大小端
 	 * ---------------------------------------------
 	 */
+         /* sctlr_el3 Provides top level control of the system, 
+	    including its memory system, at EL3 */
 	mrs	x0, sctlr_el3
-	bic	x0, x0, #SCTLR_EE_BIT
-	msr	sctlr_el3, x0
-	isb
+	bic	x0, x0, #SCTLR_EE_BIT  //给x0的第25位清零...
+	msr	sctlr_el3, x0 // 设置为小端模式... 
+	isb    //内存屏障指令，等待所有流水线中的指令执行完毕
 
 	/* ---------------------------------------------
 	 * Perform any processor specific actions upon
 	 * reset e.g. cache, tlb invalidations etc.
+   	 * 复位时，做任何处理器相关的初始化动作
+         * 例如，cache，tlb失效等等...
 	 * ---------------------------------------------
 	 */
 	bl	reset_handler
@@ -62,6 +68,7 @@ func bl1_entrypoint
 	/* ---------------------------------------------
 	 * Enable the instruction cache, stack pointer
 	 * and data access alignment checks
+         * 使能指令缓存，栈指针，数据访问对齐检查...
 	 * ---------------------------------------------
 	 */
 	mov	x1, #(SCTLR_I_BIT | SCTLR_A_BIT | SCTLR_SA_BIT)
@@ -72,34 +79,43 @@ func bl1_entrypoint
 
 	/* ---------------------------------------------
 	 * Set the exception vector to something sane.
+         * 设置异常向量
 	 * ---------------------------------------------
 	 */
-	adr	x0, bl1_exceptions
-	msr	vbar_el3, x0
-	isb
+	adr	x0, bl1_exceptions  /* 把bl1_exceptions所对应的地址给x0 */
+	msr	vbar_el3, x0    /* Vector Base Address Register (EL3) */
+	isb   
 
 	/* ---------------------------------------------
 	 * Enable the SError interrupt now that the
 	 * exception vectors have been setup.
+         * 既然异常向量已经设置好，使能SError中断
 	 * ---------------------------------------------
 	 */
 	msr	daifclr, #DAIF_ABT_BIT
 
 	/* ---------------------------------------------------------------------
 	 * The initial state of the Architectural feature trap register
-	 * (CPTR_EL3) is unknown and it must be set to a known state. All
-	 * feature traps are disabled. Some bits in this register are marked as
+	 * (CPTR_EL3) is unknown and it must be set to a known state. 
+	 * 体系结构的初始状态特征陷入寄存器（CPTR_EL3）未知的，注意，它必须设置为已知状态
+         * All feature traps are disabled. Some bits in this register are marked as
 	 * Reserved and should not be modified.
-	 *
+	 * 所有特征陷入是禁止的。这个寄存器中的一些位被标记为保留并且不能被修改。
 	 * CPTR_EL3.TCPAC: This causes a direct access to the CPACR_EL1 from EL1
 	 *  or the CPTR_EL2 from EL2 to trap to EL3 unless it is trapped at EL2.
+           除非陷入EL2，否则它导致从EL1对CPACR_EL1的访问或者从EL2对CPTR_EL2的访问来达到陷入EL3的目的...
+
 	 * CPTR_EL3.TTA: This causes access to the Trace functionality to trap
 	 *  to EL3 when executed from EL0, EL1, EL2, or EL3. If system register
 	 *  access to trace functionality is not supported, this bit is RES0.
+	    当从EL0....执行的时候，这导致对trace功能的访问以陷入到EL3。如果系统寄存器
+            对跟踪功能的访问不被支持，那么这个bit为RES0
 	 * CPTR_EL3.TFP: This causes instructions that access the registers
 	 *  associated with Floating Point and Advanced SIMD execution to trap
 	 *  to EL3 when executed from any exception level, unless trapped to EL1
 	 *  or EL2.
+            这个导致访问寄存器的指令和浮点数组织起来，高级的SIMD执行陷入EL3当从任何异等级陷入EL3
+            除非陷入到EL1或者EL2
 	 * ---------------------------------------------------------------------
 	 */
 	mrs	x0, cptr_el3
@@ -110,6 +126,7 @@ func bl1_entrypoint
 
 	/* -------------------------------------------------------
 	 * Will not return from this macro if it is a warm boot.
+	 * 
 	 * -------------------------------------------------------
 	 */
 	wait_for_entrypoint

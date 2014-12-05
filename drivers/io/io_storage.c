@@ -287,7 +287,7 @@ int io_seek(uintptr_t handle, io_seek_mode_t mode, ssize_t offset)
 
 
 /* Determine the length of an IO entity */
-int io_size(uintptr_t handle, size_t *length)
+int io_size(uintptr_t handle, size_t *length)  //hugo
 {
 	int result = IO_FAIL;
 	assert(is_valid_entity(handle) && (length != NULL));

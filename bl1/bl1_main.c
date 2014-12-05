@@ -38,12 +38,17 @@
 #include "bl1_private.h"
 
 /*******************************************************************************
- * Runs BL2 from the given entry point. It results in dropping the
- * exception level
+ * Runs BL2 from the given entry point. 
+ * 从指定的入口点开始运行BL2
+ * It results in dropping the exception level
+ * 结果是退出excpetion level...
  ******************************************************************************/
 static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 {
+	INFO("bl1_run_bl2: hugo................. 001");
+
 	bl1_arch_next_el_setup();
+	INFO("bl1_run_bl2: hugo................. 002");
 
 	/* Tell next EL what we want done */
 	bl2_ep->args.arg0 = RUN_IMAGE;
@@ -54,7 +59,9 @@ static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 	write_spsr_el3(bl2_ep->spsr);
 	write_elr_el3(bl2_ep->pc);
 
-	eret(bl2_ep->args.arg0,
+	INFO("bl1_run_bl2: hugo................. 003");
+
+	eret(bl2_ep->args.arg0,     //在这里出的问题.....
 		bl2_ep->args.arg1,
 		bl2_ep->args.arg2,
 		bl2_ep->args.arg3,
@@ -62,6 +69,7 @@ static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 		bl2_ep->args.arg5,
 		bl2_ep->args.arg6,
 		bl2_ep->args.arg7);
+	INFO("bl1_run_bl2: hugo................. 004");
 }
 
 /*******************************************************************************
@@ -107,7 +115,7 @@ void bl1_init_bl2_mem_layout(const meminfo_t *bl1_mem_layout,
 void bl1_main(void)
 {
 	/* Announce our arrival */
-	NOTICE(FIRMWARE_WELCOME_STR);
+	NOTICE(FIRMWARE_WELCOME_STR); //hugo
 	NOTICE("BL1: %s\n", version_string);
 	NOTICE("BL1: %s\n", build_message);
 
@@ -136,7 +144,7 @@ void bl1_main(void)
 	bl1_platform_setup();
 
 	SET_PARAM_HEAD(&bl2_image_info, PARAM_IMAGE_BINARY, VERSION_1, 0);
-	SET_PARAM_HEAD(&bl2_ep, PARAM_EP, VERSION_1, 0);
+	SET_PARAM_HEAD(&bl2_ep, PARAM_EP, VERSION_1, 0);   
 
 	/* Find out how much free trusted ram remains after BL1 load */
 	bl1_tzram_layout = bl1_plat_sec_mem_layout();
@@ -170,7 +178,9 @@ void bl1_main(void)
 	NOTICE("BL1: Booting BL2\n");
 	INFO("BL1: BL2 address = 0x%llx\n",
 		(unsigned long long) bl2_ep.pc);
-	INFO("BL1: BL2 spsr = 0x%x\n", bl2_ep.spsr);
+
+	INFO("BL1: BL2 spsr = 0x%x\n", bl2_ep.spsr);  //hugo
+
 	VERBOSE("BL1: BL2 memory layout address = 0x%llx\n",
 		(unsigned long long) bl2_tzram_layout);
 

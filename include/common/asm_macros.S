@@ -90,10 +90,12 @@
 
 	/* ---------------------------------------------
 	 * Find the type of reset and jump to handler
+         * 确定复位的类型，跳转到handler处。如果不存在handler，那么就是一个冷启动
 	 * if present. If the handler is null then it is
 	 * a cold boot. The primary cpu will set up the
 	 * platform while the secondaries wait for
 	 * their turn to be woken up
+         * 主CPU设置平台，此时其他CPU等待被唤醒....
 	 * ---------------------------------------------
 	 */
 	.macro wait_for_entrypoint

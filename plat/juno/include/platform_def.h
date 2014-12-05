@@ -91,7 +91,8 @@
 #define TZROM_SIZE		0x00010000
 
 #define TZRAM_BASE		0x04001000
-#define TZRAM_SIZE		0x0003F000
+//#define TZRAM_SIZE		0x0003F000
+#define TZRAM_SIZE		0x00060000
 
 /*******************************************************************************
  * BL1 specific defines.
@@ -113,6 +114,7 @@
  * Load address of BL3-0 in the Juno port
  * BL3-0 is loaded to the same place as BL3-1.  Once BL3-0 is transferred to the
  * SCP, it is discarded and BL3-1 is loaded over the top.
+ * bl31»á¸²¸Çbl30...
  ******************************************************************************/
 #define BL30_BASE			BL31_BASE
 
@@ -129,6 +131,7 @@
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
 # define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - 0x1d000)
+//#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)
 # define BL32_LIMIT			BL2_BASE
 #elif (PLAT_TSP_LOCATION_ID == PLAT_DRAM_ID)
 # define TSP_SEC_MEM_BASE		DRAM_SEC_BASE
