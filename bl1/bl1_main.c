@@ -45,12 +45,13 @@
  ******************************************************************************/
 static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 {
-	INFO("bl1_run_bl2: hugo................. 001");
+	INFO("bl1_run_bl2: hugo................. 001\n");
 
 	bl1_arch_next_el_setup();
-	INFO("bl1_run_bl2: hugo................. 002");
+	INFO("bl1_run_bl2: hugo................. 002\n");
 
 	/* Tell next EL what we want done */
+	// 告诉下一EL，我们想干什么...
 	bl2_ep->args.arg0 = RUN_IMAGE;
 
 	if (GET_SECURITY_STATE(bl2_ep->h.attr) == NON_SECURE)
@@ -59,7 +60,7 @@ static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 	write_spsr_el3(bl2_ep->spsr);
 	write_elr_el3(bl2_ep->pc);
 
-	INFO("bl1_run_bl2: hugo................. 003");
+	INFO("bl1_run_bl2: hugo................. 003\n");
 
 	eret(bl2_ep->args.arg0,     //在这里出的问题.....
 		bl2_ep->args.arg1,
@@ -69,7 +70,8 @@ static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 		bl2_ep->args.arg5,
 		bl2_ep->args.arg6,
 		bl2_ep->args.arg7);
-	INFO("bl1_run_bl2: hugo................. 004");
+
+	INFO("bl1_run_bl2: hugo................. 004\n");
 }
 
 /*******************************************************************************
@@ -143,10 +145,12 @@ void bl1_main(void)
 	/* Perform platform setup in BL1. */
 	bl1_platform_setup();
 
+	// 设置什么参数头...????
 	SET_PARAM_HEAD(&bl2_image_info, PARAM_IMAGE_BINARY, VERSION_1, 0);
 	SET_PARAM_HEAD(&bl2_ep, PARAM_EP, VERSION_1, 0);   
 
 	/* Find out how much free trusted ram remains after BL1 load */
+	// 查看bl1加载之后，还剩下多少trusted ram留下来...
 	bl1_tzram_layout = bl1_plat_sec_mem_layout();
 
 	/* Load the BL2 image */

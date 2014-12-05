@@ -64,6 +64,7 @@ func mpidr_mask_lower_afflvls
 	ret
 
 
+/* ... */
 func eret
 	eret
 

@@ -97,10 +97,12 @@
 /*******************************************************************************
  * BL1 specific defines.
  * BL1 RW data is relocated from ROM to RAM at runtime so we need 2 base
+ * BL1 的RW数据要从ROM重定向到RAM，所以我们需要两个基地址...
  * addresses.
  ******************************************************************************/
 #define BL1_RO_BASE			TZROM_BASE
 #define BL1_RO_LIMIT			(TZROM_BASE + TZROM_SIZE)
+
 #define BL1_RW_BASE			TZRAM_BASE
 #define BL1_RW_LIMIT			BL31_BASE
 
@@ -127,7 +129,7 @@
 /*******************************************************************************
  * BL3-2 specific defines.
  ******************************************************************************/
-#if (PLAT_TSP_LOCATION_ID == PLAT_TRUSTED_SRAM_ID)
+#if (PLAT_TSP_LOCATION_ID == PLAT_TRUSTED_SRAM_ID)    // 走这里 ...
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
 # define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - 0x1d000)

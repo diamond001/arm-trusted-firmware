@@ -34,6 +34,7 @@
 /*******************************************************************************
  * Declarations of linker defined symbols which will tell us where BL1 lives
  * in Trusted RAM
+ * 链接器的生命，定义的符号，告诉我们BL1在可信RAM的哪个位置...
  ******************************************************************************/
 extern uint64_t __BL1_RAM_START__;
 extern uint64_t __BL1_RAM_END__;

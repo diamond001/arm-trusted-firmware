@@ -99,6 +99,7 @@
 /*******************************************************************************
  * Structure used for telling the next BL how much of a particular type of
  * memory is available for its use and how much is already used.
+ * 结构体，用于高速下一个BL，有多少特殊类型的内存可用，有多少已经被使用...
  ******************************************************************************/
 typedef struct meminfo {
 	uint64_t total_base;
@@ -107,7 +108,7 @@ typedef struct meminfo {
 	size_t free_size;
 } meminfo_t;
 
-typedef struct aapcs64_params {
+typedef struct aapcs64_params {    //做什么用......??
 	unsigned long arg0;
 	unsigned long arg1;
 	unsigned long arg2;
@@ -120,7 +121,10 @@ typedef struct aapcs64_params {
 
 /***************************************************************************
  * This structure provides version information and the size of the
+ * 这个结构提供版本信息，和结构体的大小
  * structure, attributes for the structure it represents
+ * 属性...
+ *
  ***************************************************************************/
 typedef struct param_header {
 	uint8_t type;		/* type of the structure */
@@ -131,10 +135,14 @@ typedef struct param_header {
 
 /*****************************************************************************
  * This structure represents the superset of information needed while
- * switching exception levels. The only two mechanisms to do so are
- * ERET & SMC. Security state is indicated using bit zero of header
- * attribute
+ * switching exception levels. 
+ * 这个结构体代表所需要信息的超集，当切换异常等级的时候...
+ * The only two mechanisms to do so are ERET & SMC. 
+ * 只有两种机制可以做异常切换：ERET和SMC
+ * Security state is indicated using bit zero of header attribute
+ * 安全状态：指示使用header属性的0位...
  * NOTE: BL1 expects entrypoint followed by spsr while processing
+ * 注意：bl1期望入口点之后紧随spsr，当从入口点处理SMC跳转到bl31
  * SMC to jump to BL31 from the start of entry_point_info
  *****************************************************************************/
 typedef struct entry_point_info {

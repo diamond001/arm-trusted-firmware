@@ -59,6 +59,7 @@ extern unsigned long __COHERENT_RAM_END__;
 #define BL1_COHERENT_RAM_LIMIT (unsigned long)(&__COHERENT_RAM_END__)
 
 /* Data structure which holds the extents of the trusted RAM for BL1 */
+// 数据结构，把持着为BL1所准备的可信RAM的范围....
 static meminfo_t bl1_tzram_layout;
 
 meminfo_t *bl1_plat_sec_mem_layout(void)
@@ -72,6 +73,9 @@ meminfo_t *bl1_plat_sec_mem_layout(void)
 void bl1_early_platform_setup(void)
 {
 	const size_t bl1_size = BL1_RAM_LIMIT - BL1_RAM_BASE;
+
+	INFO("BL1: 0x%lx - 0x%lx [size = %u] -- hugo -001\n", BL1_RAM_BASE, BL1_RAM_LIMIT,
+	     bl1_size);
 
 	/* Initialize the console to provide early debug support */
 	console_init(PL011_UART2_BASE, PL011_UART2_CLK_IN_HZ, PL011_BAUDRATE);
@@ -97,7 +101,7 @@ void bl1_early_platform_setup(void)
 		    BL1_RAM_BASE,
 		    bl1_size);
 
-	INFO("BL1: 0x%lx - 0x%lx [size = %u]\n", BL1_RAM_BASE, BL1_RAM_LIMIT,
+	INFO("BL1: 0x%lx - 0x%lx [size = %u] -- hugo -002\n", BL1_RAM_BASE, BL1_RAM_LIMIT,
 	     bl1_size);
 }
 
