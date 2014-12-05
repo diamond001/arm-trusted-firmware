@@ -92,7 +92,8 @@
 
 #define TZRAM_BASE		0x04001000
 //#define TZRAM_SIZE		0x0003F000
-#define TZRAM_SIZE		0x00060000
+#define TZRAM_SIZE		0x0005F000
+//#define TZRAM_SIZE		0x00060000
 
 /*******************************************************************************
  * BL1 specific defines.
@@ -109,7 +110,7 @@
 /*******************************************************************************
  * BL2 specific defines.
  ******************************************************************************/
-#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)
+#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)   // 0xd000是52K，bl2.bin实际大小是24K
 #define BL2_LIMIT			(TZRAM_BASE + TZRAM_SIZE)
 
 /*******************************************************************************
@@ -132,7 +133,8 @@
 #if (PLAT_TSP_LOCATION_ID == PLAT_TRUSTED_SRAM_ID)    // 走这里 ...
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
-# define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - 0x1d000)
+						//要保证bl32基地址不变，才能实现扩大bl32空间...
+# define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - ( 0x1d000 + 0x20000 ))  
 //#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)
 # define BL32_LIMIT			BL2_BASE
 #elif (PLAT_TSP_LOCATION_ID == PLAT_DRAM_ID)

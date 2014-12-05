@@ -45,7 +45,7 @@
  ******************************************************************************/
 static void __dead2 bl1_run_bl2(entry_point_info_t *bl2_ep)
 {
-	INFO("bl1_run_bl2: hugo................. 001\n");
+	INFO("bl1_run_bl2: hugo......test........... 001\n");
 
 	bl1_arch_next_el_setup();
 	INFO("bl1_run_bl2: hugo................. 002\n");
