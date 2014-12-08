@@ -91,8 +91,8 @@
 #define TZROM_SIZE		0x00010000
 
 #define TZRAM_BASE		0x04001000
-//#define TZRAM_SIZE		0x0003F000
-#define TZRAM_SIZE		0x0005F000
+#define TZRAM_SIZE		0x0003F000
+//#define TZRAM_SIZE		0x0005F000
 //#define TZRAM_SIZE		0x00060000
 
 /*******************************************************************************
@@ -134,8 +134,8 @@
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
 						//要保证bl32基地址不变，才能实现扩大bl32空间...
-# define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - ( 0x1d000 + 0x20000 ))  
-//#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)
+//# define BL32_BASE			(TZRAM_BASE + TZRAM_SIZE - ( 0x1d000 + 0x20000 ))  
+#define BL2_BASE			(TZRAM_BASE + TZRAM_SIZE - 0xd000)
 # define BL32_LIMIT			BL2_BASE
 #elif (PLAT_TSP_LOCATION_ID == PLAT_DRAM_ID)
 # define TSP_SEC_MEM_BASE		DRAM_SEC_BASE
